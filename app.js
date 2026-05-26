@@ -8,7 +8,9 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       start: "sonido al inicia juego nuevo player.mp3",
       question: "sonido antes de una pregunta.mp3",
       lose: "perdio.mp3",
-      correct: "respuestacorrecta.mp3"
+      correct: "respuestacorrecta.mp3",
+      fifty: "50_50 y tip.mp3",
+      tip: "50_50 y tip.mp3"
     };
 
     const fallbackQuestions = [
@@ -91,6 +93,8 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     let correctAudio = null;
     let startAudio = null;
     let questionAudio = null;
+    let fiftyAudio = null;
+    let tipAudio = null;
 
     const lifelinesUsed = {
       fifty: false,
@@ -171,6 +175,14 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       if (!questionAudio) {
         questionAudio = new Audio(AUDIO_FILES.question);
         questionAudio.preload = "auto";
+      }
+      if (!fiftyAudio) {
+        fiftyAudio = new Audio(AUDIO_FILES.fifty);
+        fiftyAudio.preload = "auto";
+      }
+      if (!tipAudio) {
+        tipAudio = new Audio(AUDIO_FILES.tip);
+        tipAudio.preload = "auto";
       }
     }
 
@@ -459,7 +471,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     function useFiftyFifty() {
       if (lifelinesUsed.fifty || gameEnded) return;
       ensureAudio();
-      sfxLifeline();
+      playMp3(fiftyAudio);
       const q = questions[currentIndex];
       const wrongIndexes = q.options.map((_, i) => i).filter(i => i !== q.answerIndex);
 
@@ -488,7 +500,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     function markTeacherTip() {
       if (gameEnded) return;
       ensureAudio();
-      sfxLifeline();
+      playMp3(tipAudio);
       lifelinesUsed.teacher = !lifelinesUsed.teacher;
       teacherBtn.classList.toggle("used", lifelinesUsed.teacher);
       messageEl.textContent = lifelinesUsed.teacher
