@@ -182,7 +182,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       if (!thinkingAudio) {
         thinkingAudio = new Audio(AUDIO_FILES.thinking);
         thinkingAudio.preload = "auto";
-        thinkingAudio.loop = true;
+        thinkingAudio.loop = false;
         thinkingAudio.volume = 0.5;
       }
       if (!fiftyAudio) {
