@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Wants to Be a Millionaire? - Past Tense Edition</title>
+  <style>
+    :root {
+      --bg-a: #021024;
+      --bg-b: #063c72;
+      --panel: rgba(2, 16, 36, 0.82);
+      --gold: #ffd44d;
+      --accent: #37b7ff;
+      --ok: #22c55e;
+      --bad: #ef4444;
+      --text: #f3f7ff;
+      --muted: #b8cae6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, #0e4f99 0%, transparent 35%),
+        radial-gradient(circle at 85% 80%, #0b2f56 0%, transparent 40%),
+        linear-gradient(140deg, var(--bg-a), var(--bg-b));
+      display: flex;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .app {
+      width: min(1200px, 100%);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 18px;
+      backdrop-filter: blur(5px);
+    }
+
+    .title {
+      margin: 0 0 8px;
+      color: var(--gold);
+      letter-spacing: 0.4px;
+    }
+
+    .subtitle {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+    }
+
+    #questionText {
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 14px;
+      margin: 0 0 14px;
+      line-height: 1.45;
+      font-size: 1.08rem;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .option {
+      text-align: left;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(11, 47, 86, 0.6);
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+
+    .option:hover:not(:disabled) {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .option.selected {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px var(--gold) inset;
+    }
+
+    .option.correct {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: var(--ok);
+    }
+
+    .option.wrong {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--bad);
+    }
+
+    .option.eliminated {
+      opacity: 0.35;
+      text-decoration: line-through;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      color: #031427;
+      font-weight: 700;
+    }
+
+    .primary { background: var(--gold); }
+    .secondary { background: #8ad7ff; }
+    .restart { background: #d3e7ff; }
+    button:disabled { cursor: not-allowed; opacity: 0.55; }
+
+    .lifelines {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .lifeline {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-weight: 600;
+    }
+
+    .lifeline.used {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    .ico {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+      border-radius: 999px;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.74rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    #message {
+      min-height: 44px;
+      margin: 0;
+      color: #eaf2ff;
+      font-size: 0.95rem;
+    }
+
+    .ladder-title {
+      margin: 0 0 8px;
+      color: #ffe792;
+    }
+
+    .ladder {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .ladder-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .ladder-item.current {
+      background: rgba(255, 212, 77, 0.2);
+      border-color: var(--gold);
+      color: #fff8dc;
+      font-weight: 700;
+    }
+
+    .warning {
+      color: #ffd1d1;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <h1 class="title">Who Wants to Be a Millionaire?</h1>
+      <p class="subtitle">Practice English past tense (regular and irregular verbs).</p>
+
+      <div class="status-row">
+        <div class="chip">Question: <strong id="questionNumber">1</strong></div>
+        <div class="chip">Money: <strong id="money">$0</strong></div>
+        <div class="chip">Level: <strong id="level">1</strong></div>
+        <div class="chip">Source: <strong id="questionSource">Loading...</strong></div>
+      </div>
+
+      <div class="lifelines">
+        <button id="fiftyBtn" class="lifeline"><span class="ico">◐</span>50-50</button>
+        <button id="teacherBtn" class="lifeline"><span class="ico">?</span>Ask Teacher</button>
+        <button id="chatgptBtn" class="lifeline"><span class="ico">AI</span>Ask ChatGPT</button>
+      </div>
+
+      <p id="questionText">Loading questions...</p>
+      <div id="optionsContainer" class="options"></div>
+
+      <div class="controls">
+        <button id="confirmBtn" class="primary" disabled>Confirm answer</button>
+        <button id="nextBtn" class="secondary" disabled>Next question</button>
+        <button id="restartBtn" class="restart">Restart game</button>
+      </div>
+
+      <p id="message"></p>
+    </section>
+
+    <aside class="panel">
+      <h3 class="ladder-title">Money Ladder</h3>
+      <div id="ladder" class="ladder"></div>
+      <p class="warning">
+        Note: questions are loaded from <strong>qqsm_questions.json</strong>.
+        If opened with file://, browser CORS blocks JSON fetch. Use local HTTP:
+        <strong>http://localhost:8000/QQSM.HTML</strong>.
+      </p>
+    </aside>
+  </main>
+
+  <script>
+    const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
+
+    const fallbackQuestions = [
+      {
+        "question": "Choose the correct past tense sentence:",
+        "options": ["Yesterday I goed to school.", "Yesterday I went to school.", "Yesterday I go to school.", "Yesterday I gone to school."],
+        "answerIndex": 1
+      },
+      {
+        "question": "What is the past tense of \"play\"?",
+        "options": ["playd", "played", "plaid", "plays"],
+        "answerIndex": 1
+      },
+      {
+        "question": "Complete: She ____ a cake last night.",
+        "options": ["baked", "bake", "bakes", "boken"],
+        "answerIndex": 0
+      },
+      {
+        "question": "What is the past tense of \"see\"?",
+        "options": ["seed", "saw", "seen", "see"],
+        "answerIndex": 1
+      },
+      {
+        "question": "Choose the correct sentence:",
+        "options": ["He writed a letter.", "He wrote a letter.", "He written a letter.", "He write a letter."],
+        "answerIndex": 1
+      },
+      {
+        "question": "What is the past tense of \"study\"?",
+        "options": ["studied", "studyed", "studys", "stude"],
+        "answerIndex": 0
+      },
+      {
+        "question": "Complete: They ____ football after school.",
+        "options": ["play", "played", "plaid", "playing"],
+        "answerIndex": 1
+      },
+      {
+        "question": "What is the past tense of \"eat\"?",
+        "options": ["ate", "eated", "eaten", "eat"],
+        "answerIndex": 0
+      },
+      {
+        "question": "Choose the correct question in past tense:",
+        "options": ["Did you watched the movie?", "Did you watch the movie?", "Did you watching the movie?", "Do you watched the movie?"],
+        "answerIndex": 1
+      },
+      {
+        "question": "Complete: We ____ very happy yesterday.",
+        "options": ["was", "were", "are", "be"],
+        "answerIndex": 1
+      },
+      {
+        "question": "What is the past tense of \"take\"?",
+        "options": ["tooked", "taken", "took", "take"],
+        "answerIndex": 2
+      },
+      {
+        "question": "Choose the correct sentence:",
+        "options": ["I didn't went to class.", "I didn't go to class.", "I not went to class.", "I didn't gone to class."],
+        "answerIndex": 1
+      }
+    ];
+
+    const QUESTIONS_PER_RUN = 10;
+    let questionBank = [];
+    let questions = [];
+    let currentIndex = 0;
+    let selectedIndex = null;
+    let currentMoney = 0;
+    let gameEnded = false;
+    let eliminatedSet = new Set();
+    let currentSource = "Fallback";
+
+    const lifelinesUsed = {
+      fifty: false,
+      teacher: false,
+      chatgpt: false
+    };
+
+    const questionNumberEl = document.getElementById("questionNumber");
+    const moneyEl = document.getElementById("money");
+    const levelEl = document.getElementById("level");
+    const questionTextEl = document.getElementById("questionText");
+    const questionSourceEl = document.getElementById("questionSource");
+    const optionsContainerEl = document.getElementById("optionsContainer");
+    const messageEl = document.getElementById("message");
+    const ladderEl = document.getElementById("ladder");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const fiftyBtn = document.getElementById("fiftyBtn");
+    const teacherBtn = document.getElementById("teacherBtn");
+    const chatgptBtn = document.getElementById("chatgptBtn");
+
+    function formatMoney(value) {
+      return "$" + value.toLocaleString("en-US");
+    }
+
+    function setQuestionSourceLabel(source) {
+      currentSource = source;
+      questionSourceEl.textContent = source;
+    }
+
+    function updateStatus() {
+      questionNumberEl.textContent = Math.min(currentIndex + 1, questions.length);
+      moneyEl.textContent = formatMoney(currentMoney);
+      levelEl.textContent = String(Math.min(currentIndex + 1, prizeLevels.length));
+      renderLadder();
+    }
+
+    function renderLadder() {
+      ladderEl.innerHTML = "";
+      for (let i = 0; i < prizeLevels.length; i++) {
+        const item = document.createElement("div");
+        item.className = "ladder-item" + (i === currentIndex ? " current" : "");
+        item.innerHTML = `<span>Level ${i + 1}</span><span>${formatMoney(prizeLevels[i])}</span>`;
+        ladderEl.appendChild(item);
+      }
+    }
+
+    function resetRoundState() {
+      selectedIndex = null;
+      eliminatedSet = new Set();
+      confirmBtn.disabled = true;
+      nextBtn.disabled = true;
+      messageEl.textContent = "";
+    }
+
+    function renderQuestion() {
+      if (!questions.length) {
+        questionTextEl.textContent = "No questions available.";
+        optionsContainerEl.innerHTML = "";
+        confirmBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+      const q = questions[currentIndex];
+      resetRoundState();
+      questionTextEl.textContent = q.question;
+      optionsContainerEl.innerHTML = "";
+
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.textContent = `${String.fromCharCode(65 + index)}. ${opt}`;
+        btn.type = "button";
+        btn.addEventListener("click", () => selectOption(index));
+        optionsContainerEl.appendChild(btn);
+      });
+      updateStatus();
+    }
+
+    function selectOption(index) {
+      if (gameEnded || eliminatedSet.has(index)) return;
+      selectedIndex = index;
+      confirmBtn.disabled = false;
+      const optionButtons = optionsContainerEl.querySelectorAll(".option");
+      optionButtons.forEach((btn, i) => {
+        btn.classList.toggle("selected", i === index);
+      });
+    }
+
+    function confirmAnswer() {
+      if (selectedIndex === null || gameEnded) return;
+
+      const q = questions[currentIndex];
+      const optionButtons = optionsContainerEl.querySelectorAll(".option");
+      optionButtons.forEach(btn => btn.disabled = true);
+
+      const correct = selectedIndex === q.answerIndex;
+      optionButtons[q.answerIndex].classList.add("correct");
+
+      if (correct) {
+        currentMoney = prizeLevels[currentIndex] || currentMoney;
+        messageEl.textContent = "Correct answer. You can continue to the next question.";
+        if (currentIndex === questions.length - 1 || currentIndex === prizeLevels.length - 1) {
+          messageEl.textContent = `Great job! You finished with ${formatMoney(currentMoney)}.`;
+          gameEnded = true;
+        } else {
+          nextBtn.disabled = false;
+        }
+      } else {
+        optionButtons[selectedIndex].classList.add("wrong");
+        messageEl.textContent = `Incorrect. Game over. You finished with ${formatMoney(currentMoney)}.`;
+        gameEnded = true;
+      }
+
+      confirmBtn.disabled = true;
+      updateStatus();
+    }
+
+    function nextQuestion() {
+      if (gameEnded) return;
+      currentIndex += 1;
+      renderQuestion();
+    }
+
+    function restartGame() {
+      currentIndex = 0;
+      selectedIndex = null;
+      currentMoney = 0;
+      gameEnded = false;
+      lifelinesUsed.fifty = false;
+      lifelinesUsed.teacher = false;
+      lifelinesUsed.chatgpt = false;
+      [fiftyBtn, teacherBtn, chatgptBtn].forEach(btn => btn.classList.remove("used"));
+      fiftyBtn.disabled = false;
+      teacherBtn.disabled = false;
+      chatgptBtn.disabled = false;
+      const source = questionBank.length ? questionBank : fallbackQuestions;
+      questions = getRandomQuestions(source, Math.min(QUESTIONS_PER_RUN, source.length, prizeLevels.length));
+      renderQuestion();
+    }
+
+    function useFiftyFifty() {
+      if (lifelinesUsed.fifty || gameEnded) return;
+      const q = questions[currentIndex];
+      const wrongIndexes = q.options
+        .map((_, i) => i)
+        .filter(i => i !== q.answerIndex);
+
+      for (let i = wrongIndexes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [wrongIndexes[i], wrongIndexes[j]] = [wrongIndexes[j], wrongIndexes[i]];
+      }
+
+      const toEliminate = wrongIndexes.slice(0, 2);
+      const optionButtons = optionsContainerEl.querySelectorAll(".option");
+      toEliminate.forEach(i => {
+        eliminatedSet.add(i);
+        optionButtons[i].disabled = true;
+        optionButtons[i].classList.add("eliminated");
+        optionButtons[i].classList.remove("selected");
+        if (selectedIndex === i) selectedIndex = null;
+      });
+
+      if (selectedIndex === null) confirmBtn.disabled = true;
+      lifelinesUsed.fifty = true;
+      fiftyBtn.classList.add("used");
+      fiftyBtn.disabled = true;
+      messageEl.textContent = "50-50 used: two incorrect options were removed.";
+    }
+
+    function markTeacherHint() {
+      if (gameEnded) return;
+      lifelinesUsed.teacher = !lifelinesUsed.teacher;
+      teacherBtn.classList.toggle("used", lifelinesUsed.teacher);
+      messageEl.textContent = lifelinesUsed.teacher
+        ? "Teacher hint marked as used."
+        : "Teacher hint mark removed.";
+    }
+
+    function markChatGPT() {
+      if (gameEnded) return;
+      lifelinesUsed.chatgpt = !lifelinesUsed.chatgpt;
+      chatgptBtn.classList.toggle("used", lifelinesUsed.chatgpt);
+      messageEl.textContent = lifelinesUsed.chatgpt
+        ? "Ask ChatGPT marked as used."
+        : "Ask ChatGPT mark removed.";
+    }
+
+    function getRandomQuestions(source, count) {
+      const clone = [...source];
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone.slice(0, Math.min(count, clone.length));
+    }
+
+    async function loadQuestions() {
+      if (window.location.protocol === "file:") {
+        questionBank = fallbackQuestions;
+        setQuestionSourceLabel("Fallback");
+        messageEl.textContent = "JSON blocked by browser CORS in file:// mode. Run a local server and open http://localhost:8000/QQSM.HTML";
+        questions = getRandomQuestions(
+          questionBank,
+          Math.min(QUESTIONS_PER_RUN, questionBank.length, prizeLevels.length)
+        );
+        renderQuestion();
+        return;
+      }
+
+      try {
+        const response = await fetch("qqsm_questions.json");
+        if (!response.ok) throw new Error("Could not load JSON");
+        const data = await response.json();
+        if (!Array.isArray(data) || data.length < 1) throw new Error("Invalid question format");
+        questionBank = data;
+        setQuestionSourceLabel("JSON");
+      } catch (err) {
+        questionBank = fallbackQuestions;
+        setQuestionSourceLabel("Fallback");
+        messageEl.textContent = "Could not load external JSON. Fallback questions were loaded.";
+      }
+
+      questions = getRandomQuestions(
+        questionBank,
+        Math.min(QUESTIONS_PER_RUN, questionBank.length, prizeLevels.length)
+      );
+      renderQuestion();
+    }
+
+    confirmBtn.addEventListener("click", confirmAnswer);
+    nextBtn.addEventListener("click", nextQuestion);
+    restartBtn.addEventListener("click", restartGame);
+    fiftyBtn.addEventListener("click", useFiftyFifty);
+    teacherBtn.addEventListener("click", markTeacherHint);
+    chatgptBtn.addEventListener("click", markChatGPT);
+
+    loadQuestions();
+  </script>
+</body>
+</html>
