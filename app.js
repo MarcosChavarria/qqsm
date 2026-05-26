@@ -197,6 +197,12 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       } catch {}
     }
 
+    function showStartModal(playSound = true) {
+      startModal.classList.add("show");
+      playerInput.focus();
+      if (playSound) playMp3(startAudio);
+    }
+
     function playTone(freq, duration = 0.14, type = "sine", volume = 0.03, delay = 0) {
       if (!audioCtx) return;
       const startAt = audioCtx.currentTime + delay;
@@ -593,7 +599,6 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       currentPlayerName = sanitizeName(playerInput.value);
       playerNameEl.textContent = currentPlayerName;
       startModal.classList.remove("show");
-      playMp3(startAudio);
 
       if (!questionsLoaded) {
         await loadQuestions();
@@ -605,8 +610,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     function promptNewPlayer() {
       hideResultPopup();
       playerInput.value = "";
-      startModal.classList.add("show");
-      playerInput.focus();
+      showStartModal(true);
     }
 
     function openTeacherMode() {
@@ -632,4 +636,4 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     ensureMp3Audio();
     renderTopScores();
-    playerInput.focus();
+    showStartModal(true);
