@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Mode - Question Bank Editor</title>
+  <style>
+    :root {
+      --bg-a: #07162a;
+      --bg-b: #0d2f52;
+      --panel: rgba(7, 22, 42, 0.86);
+      --text: #eef5ff;
+      --muted: #bdd1ec;
+      --gold: #ffd44d;
+      --accent: #60c2ff;
+      --danger: #ff7b7b;
+      --ok: #34d399;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 15%, #165191 0%, transparent 35%),
+        radial-gradient(circle at 85% 80%, #0a2440 0%, transparent 40%),
+        linear-gradient(145deg, var(--bg-a), var(--bg-b));
+      padding: 18px;
+    }
+
+    .wrap {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: var(--gold);
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button, .btn-file {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #031427;
+      background: #a7ddff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .primary { background: var(--gold); }
+    .danger { background: #ffb2b2; }
+    .success { background: #9ef2cf; }
+    .neutral { background: #cfe4ff; }
+    .btn-file input { display: none; }
+
+    #status {
+      margin-top: 8px;
+      min-height: 20px;
+      color: #dcf2ff;
+      font-size: 0.95rem;
+    }
+
+    .question-card {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .row.options {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    label {
+      display: block;
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      padding: 9px 10px;
+      font-size: 0.95rem;
+    }
+
+    textarea {
+      min-height: 68px;
+      resize: vertical;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title {
+      margin: 0 0 6px;
+      color: #fff2bf;
+      font-size: 1rem;
+    }
+
+    .hint {
+      color: #c6dcfb;
+      font-size: 0.88rem;
+      margin: 0;
+    }
+
+    @media (max-width: 800px) {
+      .row.options { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="panel">
+      <h1>Teacher Mode</h1>
+      <p class="subtitle">Create and edit the question bank from the UI. Saved data is used by the main game automatically.</p>
+      <div class="toolbar">
+        <button id="addQuestionBtn" class="primary">+ Add Question</button>
+        <button id="saveBtn" class="success">Save to Game</button>
+        <button id="exportBtn" class="neutral">Export JSON</button>
+        <label class="btn-file neutral">
+          Import JSON
+          <input id="importInput" type="file" accept=".json,application/json">
+        </label>
+        <button id="resetBtn" class="danger">Reset to JSON File</button>
+        <a class="neutral" href="index.html">Back to Game</a>
+      </div>
+      <p id="status"></p>
+      <p class="hint">Required format: 4 options per question and one valid correct index.</p>
+    </section>
+
+    <section class="panel">
+      <div id="questionsContainer"></div>
+    </section>
+  </main>
+
+  <script>
+    const QUESTION_BANK_STORAGE_KEY = "qqsm_question_bank_v1";
+    let questions = [];
+
+    const addQuestionBtn = document.getElementById("addQuestionBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const exportBtn = document.getElementById("exportBtn");
+    const importInput = document.getElementById("importInput");
+    const resetBtn = document.getElementById("resetBtn");
+    const statusEl = document.getElementById("status");
+    const questionsContainer = document.getElementById("questionsContainer");
+
+    function setStatus(text, type = "info") {
+      statusEl.textContent = text;
+      statusEl.style.color = type === "error" ? "#ffb4b4" : (type === "ok" ? "#9ef2cf" : "#dcf2ff");
+    }
+
+    function defaultQuestion() {
+      return {
+        question: "Write your question here",
+        options: ["Option A", "Option B", "Option C", "Option D"],
+        answerIndex: 0
+      };
+    }
+
+    function isValidQuestion(question) {
+      return question &&
+        typeof question.question === "string" &&
+        Array.isArray(question.options) &&
+        question.options.length === 4 &&
+        question.options.every(opt => typeof opt === "string" && opt.trim().length > 0) &&
+        Number.isInteger(question.answerIndex) &&
+        question.answerIndex >= 0 &&
+        question.answerIndex < question.options.length;
+    }
+
+    function readStorageBank() {
+      try {
+        const raw = localStorage.getItem(QUESTION_BANK_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        if (Array.isArray(parsed) && parsed.length && parsed.every(isValidQuestion)) {
+          return parsed;
+        }
+      } catch {}
+      return null;
+    }
+
+    async function readDefaultJsonBank() {
+      try {
+        const response = await fetch("qqsm_questions.json");
+        if (!response.ok) throw new Error("Could not load JSON file.");
+        const data = await response.json();
+        if (!Array.isArray(data) || !data.length || !data.every(isValidQuestion)) {
+          throw new Error("Invalid JSON question format.");
+        }
+        return data;
+      } catch (err) {
+        throw new Error(err.message || "Failed to load default JSON.");
+      }
+    }
+
+    function renderQuestions() {
+      questionsContainer.innerHTML = "";
+
+      questions.forEach((q, index) => {
+        const card = document.createElement("article");
+        card.className = "question-card";
+        card.innerHTML = `
+          <div class="card-head">
+            <h3 class="card-title">Question ${index + 1}</h3>
+            <button class="danger" data-delete="${index}" type="button">Delete</button>
+          </div>
+          <div class="row">
+            <div>
+              <label>Question text</label>
+              <textarea data-question="${index}"></textarea>
+            </div>
+          </div>
+          <div class="row options">
+            <div>
+              <label>Option A</label>
+              <input type="text" data-option="${index}-0">
+            </div>
+            <div>
+              <label>Option B</label>
+              <input type="text" data-option="${index}-1">
+            </div>
+            <div>
+              <label>Option C</label>
+              <input type="text" data-option="${index}-2">
+            </div>
+            <div>
+              <label>Option D</label>
+              <input type="text" data-option="${index}-3">
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Correct answer</label>
+              <select data-answer="${index}">
+                <option value="0">A</option>
+                <option value="1">B</option>
+                <option value="2">C</option>
+                <option value="3">D</option>
+              </select>
+            </div>
+          </div>
+        `;
+        questionsContainer.appendChild(card);
+
+        const qInput = card.querySelector(`[data-question="${index}"]`);
+        qInput.value = q.question;
+        qInput.addEventListener("input", (e) => questions[index].question = e.target.value);
+
+        for (let i = 0; i < 4; i++) {
+          const opt = card.querySelector(`[data-option="${index}-${i}"]`);
+          opt.value = q.options[i] || "";
+          opt.addEventListener("input", (e) => questions[index].options[i] = e.target.value);
+        }
+
+        const answerSelect = card.querySelector(`[data-answer="${index}"]`);
+        answerSelect.value = String(q.answerIndex);
+        answerSelect.addEventListener("change", (e) => questions[index].answerIndex = Number(e.target.value));
+      });
+
+      questionsContainer.querySelectorAll("[data-delete]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.getAttribute("data-delete"));
+          questions.splice(idx, 1);
+          renderQuestions();
+        });
+      });
+    }
+
+    function validateAllQuestions() {
+      if (!questions.length) throw new Error("Add at least one question.");
+      if (!questions.every(isValidQuestion)) {
+        throw new Error("Each question must have text, 4 non-empty options, and one correct answer.");
+      }
+    }
+
+    function saveBank() {
+      try {
+        validateAllQuestions();
+        localStorage.setItem(QUESTION_BANK_STORAGE_KEY, JSON.stringify(questions));
+        setStatus("Custom question bank saved. Open the game to use it.", "ok");
+      } catch (err) {
+        setStatus(err.message, "error");
+      }
+    }
+
+    function exportBank() {
+      try {
+        validateAllQuestions();
+        const blob = new Blob([JSON.stringify(questions, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "qqsm_questions_custom.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        setStatus("JSON exported successfully.", "ok");
+      } catch (err) {
+        setStatus(err.message, "error");
+      }
+    }
+
+    async function importBank(file) {
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if (!Array.isArray(parsed) || !parsed.length || !parsed.every(isValidQuestion)) {
+          throw new Error("Imported JSON has invalid format.");
+        }
+        questions = parsed;
+        renderQuestions();
+        setStatus("JSON imported. Save to apply in game.", "ok");
+      } catch (err) {
+        setStatus(err.message || "Import failed.", "error");
+      } finally {
+        importInput.value = "";
+      }
+    }
+
+    async function resetToDefault() {
+      try {
+        const data = await readDefaultJsonBank();
+        questions = data;
+        localStorage.removeItem(QUESTION_BANK_STORAGE_KEY);
+        renderQuestions();
+        setStatus("Reset complete. Default JSON restored and custom bank cleared.", "ok");
+      } catch (err) {
+        setStatus(err.message, "error");
+      }
+    }
+
+    async function init() {
+      const fromStorage = readStorageBank();
+      if (fromStorage) {
+        questions = fromStorage;
+        setStatus("Loaded custom bank from local storage.", "ok");
+      } else {
+        try {
+          questions = await readDefaultJsonBank();
+          setStatus("Loaded questions from qqsm_questions.json.", "ok");
+        } catch (err) {
+          questions = [defaultQuestion()];
+          setStatus(`${err.message} Using one blank question.`, "error");
+        }
+      }
+      renderQuestions();
+    }
+
+    addQuestionBtn.addEventListener("click", () => {
+      questions.push(defaultQuestion());
+      renderQuestions();
+      setStatus("Question added.", "ok");
+    });
+    saveBtn.addEventListener("click", saveBank);
+    exportBtn.addEventListener("click", exportBank);
+    importInput.addEventListener("change", (e) => importBank(e.target.files[0]));
+    resetBtn.addEventListener("click", resetToDefault);
+
+    init();
+  </script>
+</body>
+</html>

@@ -2,6 +2,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     const safeLevelIndexes = [4, 7];
     const QUESTIONS_PER_RUN = 10;
     const SCORE_STORAGE_KEY = "qqsm_scores_v1";
+    const QUESTION_BANK_STORAGE_KEY = "qqsm_question_bank_v1";
 
     const fallbackQuestions = [
       {
@@ -98,6 +99,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     const nextBtn = document.getElementById("nextBtn");
     const restartBtn = document.getElementById("restartBtn");
     const newPlayerBtn = document.getElementById("newPlayerBtn");
+    const teacherModeBtn = document.getElementById("teacherModeBtn");
     const fiftyBtn = document.getElementById("fiftyBtn");
     const teacherBtn = document.getElementById("teacherBtn");
     const changeQuestionBtn = document.getElementById("changeQuestionBtn");
@@ -186,6 +188,30 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     function writeScores(scores) {
       localStorage.setItem(SCORE_STORAGE_KEY, JSON.stringify(scores));
+    }
+
+    function isValidQuestion(question) {
+      return question &&
+        typeof question.question === "string" &&
+        Array.isArray(question.options) &&
+        question.options.length === 4 &&
+        question.options.every(opt => typeof opt === "string" && opt.trim().length > 0) &&
+        Number.isInteger(question.answerIndex) &&
+        question.answerIndex >= 0 &&
+        question.answerIndex < question.options.length;
+    }
+
+    function readCustomQuestionBank() {
+      try {
+        const raw = localStorage.getItem(QUESTION_BANK_STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed) || parsed.length < 1) return null;
+        if (!parsed.every(isValidQuestion)) return null;
+        return parsed;
+      } catch {
+        return null;
+      }
     }
 
     function renderTopScores() {
@@ -453,6 +479,20 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     }
 
     async function loadQuestions() {
+      const customBank = readCustomQuestionBank();
+      if (customBank) {
+        questionBank = customBank;
+        setQuestionSourceLabel("Teacher Bank");
+        messageEl.textContent = "Loaded custom question bank from Teacher Mode.";
+        questions = getRandomQuestions(
+          questionBank,
+          Math.min(QUESTIONS_PER_RUN, questionBank.length, prizeLevels.length)
+        );
+        questionsLoaded = true;
+        renderQuestion();
+        return;
+      }
+
       if (window.location.protocol === "file:") {
         questionBank = fallbackQuestions;
         setQuestionSourceLabel("Fallback");
@@ -507,10 +547,15 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       playerInput.focus();
     }
 
+    function openTeacherMode() {
+      window.open("teacher_mode.html", "_blank");
+    }
+
     confirmBtn.addEventListener("click", confirmAnswer);
     nextBtn.addEventListener("click", nextQuestion);
     restartBtn.addEventListener("click", restartGame);
     newPlayerBtn.addEventListener("click", promptNewPlayer);
+    teacherModeBtn.addEventListener("click", openTeacherMode);
     fiftyBtn.addEventListener("click", useFiftyFifty);
     teacherBtn.addEventListener("click", markTeacherTip);
     changeQuestionBtn.addEventListener("click", useQuestionChange);
