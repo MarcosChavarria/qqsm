@@ -282,6 +282,8 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
         resultCard.classList.add("win");
         resultTitle.textContent = "Great Performance!";
         resultText.textContent = `You finished the game with ${formatMoney(amount)}.`;
+        ensureAudio();
+        sfxCelebrate();
       } else {
         resultCard.classList.add("motivation");
         resultTitle.textContent = "Keep Going!";
@@ -341,7 +343,6 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
         showResultPopup("motivation", currentMoney);
       } else {
         showResultPopup("win", currentMoney);
-        sfxCelebrate();
       }
       updateStatus();
     }
