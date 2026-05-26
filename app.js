@@ -3,6 +3,11 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     const QUESTIONS_PER_RUN = 10;
     const SCORE_STORAGE_KEY = "qqsm_scores_v1";
     const QUESTION_BANK_STORAGE_KEY = "qqsm_question_bank_v1";
+    const AUDIO_FILES = {
+      win: "gana premio.mp3",
+      start: "sonido al inicia juego nuevo player.mp3",
+      question: "sonido antes de una pregunta.mp3"
+    };
 
     const fallbackQuestions = [
       {
@@ -79,6 +84,9 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     let currentPlayerName = "Player";
     let scoreSavedForCurrentGame = false;
     let audioCtx = null;
+    let winAudio = null;
+    let startAudio = null;
+    let questionAudio = null;
 
     const lifelinesUsed = {
       fifty: false,
@@ -137,6 +145,32 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       if (audioCtx.state === "suspended") {
         audioCtx.resume();
       }
+    }
+
+    function ensureMp3Audio() {
+      if (!winAudio) {
+        winAudio = new Audio(AUDIO_FILES.win);
+        winAudio.preload = "auto";
+      }
+      if (!startAudio) {
+        startAudio = new Audio(AUDIO_FILES.start);
+        startAudio.preload = "auto";
+      }
+      if (!questionAudio) {
+        questionAudio = new Audio(AUDIO_FILES.question);
+        questionAudio.preload = "auto";
+      }
+    }
+
+    function playMp3(audioRef) {
+      if (!audioRef) return;
+      try {
+        audioRef.currentTime = 0;
+        const playPromise = audioRef.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch(() => {});
+        }
+      } catch {}
     }
 
     function playTone(freq, duration = 0.14, type = "sine", volume = 0.03, delay = 0) {
@@ -282,8 +316,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
         resultCard.classList.add("win");
         resultTitle.textContent = "Great Performance!";
         resultText.textContent = `You finished the game with ${formatMoney(amount)}.`;
-        ensureAudio();
-        sfxCelebrate();
+        playMp3(winAudio);
       } else {
         resultCard.classList.add("motivation");
         resultTitle.textContent = "Keep Going!";
@@ -312,6 +345,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
         nextBtn.disabled = true;
         return;
       }
+      playMp3(questionAudio);
       const q = questions[currentIndex];
       resetRoundState();
       questionTextEl.textContent = q.question;
@@ -530,9 +564,11 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     async function startGame() {
       ensureAudio();
+      ensureMp3Audio();
       currentPlayerName = sanitizeName(playerInput.value);
       playerNameEl.textContent = currentPlayerName;
       startModal.classList.remove("show");
+      playMp3(startAudio);
 
       if (!questionsLoaded) {
         await loadQuestions();
@@ -569,5 +605,6 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       if (event.key === "Enter") startGame();
     });
 
+    ensureMp3Audio();
     renderTopScores();
     playerInput.focus();
