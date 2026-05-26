@@ -6,7 +6,8 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     const AUDIO_FILES = {
       win: "gana premio.mp3",
       start: "sonido al inicia juego nuevo player.mp3",
-      question: "sonido antes de una pregunta.mp3"
+      question: "sonido antes de una pregunta.mp3",
+      lose: "perdio.mp3"
     };
 
     const fallbackQuestions = [
@@ -85,6 +86,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     let scoreSavedForCurrentGame = false;
     let audioCtx = null;
     let winAudio = null;
+    let loseAudio = null;
     let startAudio = null;
     let questionAudio = null;
 
@@ -155,6 +157,10 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       if (!startAudio) {
         startAudio = new Audio(AUDIO_FILES.start);
         startAudio.preload = "auto";
+      }
+      if (!loseAudio) {
+        loseAudio = new Audio(AUDIO_FILES.lose);
+        loseAudio.preload = "auto";
       }
       if (!questionAudio) {
         questionAudio = new Audio(AUDIO_FILES.question);
@@ -321,6 +327,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
         resultCard.classList.add("motivation");
         resultTitle.textContent = "Keep Going!";
         resultText.textContent = "You earned $0 this time, but you are improving. Try again and reach the safe levels.";
+        playMp3(loseAudio);
       }
       resultModal.classList.add("show");
     }
