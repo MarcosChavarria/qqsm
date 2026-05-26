@@ -21,7 +21,7 @@
         radial-gradient(circle at 15% 20%, #0e4f99 0%, transparent 35%),
         radial-gradient(circle at 85% 80%, #0b2f56 0%, transparent 40%),
         linear-gradient(140deg, var(--bg-a), var(--bg-b));
-      padding: 18px 18px 86px;
+      padding: 18px;
     }
 
     .app {
@@ -251,11 +251,8 @@
     }
 
     .admin-access {
-      position: fixed;
-      left: 50%;
-      bottom: 12px;
-      transform: translateX(-50%);
-      width: min(1200px, calc(100% - 24px));
+      width: min(1200px, 100%);
+      margin: 8px auto 0;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -265,7 +262,6 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
       color: #c4d8f3;
       font-size: 0.9rem;
-      z-index: 40;
     }
 
     .modal {
@@ -356,7 +352,6 @@
       .admin-access {
         flex-direction: column;
         align-items: flex-start;
-        bottom: 8px;
       }
     }
 
