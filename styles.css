@@ -102,6 +102,7 @@
 
     .options {
       display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 14px;
     }
@@ -126,6 +127,9 @@
     .option.selected {
       border-color: var(--gold);
       box-shadow: 0 0 0 1px var(--gold) inset;
+      background: rgba(255, 212, 77, 0.42);
+      color: #1c1200;
+      font-weight: 700;
     }
 
     .option.correct {
@@ -365,6 +369,7 @@
     @media (max-width: 900px) {
       .app { grid-template-columns: 1fr; }
       .score-panel { grid-column: auto; }
+      .options { grid-template-columns: 1fr; }
       .admin-access {
         flex-direction: column;
         align-items: flex-start;
