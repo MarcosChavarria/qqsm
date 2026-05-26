@@ -97,6 +97,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     const confirmBtn = document.getElementById("confirmBtn");
     const nextBtn = document.getElementById("nextBtn");
     const restartBtn = document.getElementById("restartBtn");
+    const newPlayerBtn = document.getElementById("newPlayerBtn");
     const fiftyBtn = document.getElementById("fiftyBtn");
     const teacherBtn = document.getElementById("teacherBtn");
     const changeQuestionBtn = document.getElementById("changeQuestionBtn");
@@ -189,6 +190,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     function renderTopScores() {
       const top = readScores()
+        .filter(entry => Number(entry.amount) > 0)
         .sort((a, b) => (b.amount - a.amount) || (b.time - a.time))
         .slice(0, 5);
 
@@ -204,6 +206,11 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     function saveScoreOnce() {
       if (scoreSavedForCurrentGame) return;
+      if (currentMoney <= 0) {
+        scoreSavedForCurrentGame = true;
+        renderTopScores();
+        return;
+      }
       const scores = readScores();
       scores.push({
         name: currentPlayerName,
@@ -493,9 +500,17 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       }
     }
 
+    function promptNewPlayer() {
+      hideResultPopup();
+      playerInput.value = "";
+      startModal.classList.add("show");
+      playerInput.focus();
+    }
+
     confirmBtn.addEventListener("click", confirmAnswer);
     nextBtn.addEventListener("click", nextQuestion);
     restartBtn.addEventListener("click", restartGame);
+    newPlayerBtn.addEventListener("click", promptNewPlayer);
     fiftyBtn.addEventListener("click", useFiftyFifty);
     teacherBtn.addEventListener("click", markTeacherTip);
     changeQuestionBtn.addEventListener("click", useQuestionChange);
@@ -510,4 +525,3 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     renderTopScores();
     playerInput.focus();
-
