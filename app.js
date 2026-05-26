@@ -7,6 +7,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       win: "gana premio.mp3",
       start: "sonido al inicia juego nuevo player.mp3",
       question: "sonido antes de una pregunta.mp3",
+      thinking: "sonido durante la pregunta.mp3",
       lose: "perdio.mp3",
       correct: "respuestacorrecta.mp3",
       fifty: "50_50 y tip.mp3",
@@ -93,6 +94,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     let correctAudio = null;
     let startAudio = null;
     let questionAudio = null;
+    let thinkingAudio = null;
     let fiftyAudio = null;
     let tipAudio = null;
     let startPromptSoundPlayed = false;
@@ -177,6 +179,12 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
         questionAudio = new Audio(AUDIO_FILES.question);
         questionAudio.preload = "auto";
       }
+      if (!thinkingAudio) {
+        thinkingAudio = new Audio(AUDIO_FILES.thinking);
+        thinkingAudio.preload = "auto";
+        thinkingAudio.loop = true;
+        thinkingAudio.volume = 0.5;
+      }
       if (!fiftyAudio) {
         fiftyAudio = new Audio(AUDIO_FILES.fifty);
         fiftyAudio.preload = "auto";
@@ -198,7 +206,21 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       } catch {}
     }
 
+    function startThinkingAudio() {
+      if (!thinkingAudio) return;
+      playMp3(thinkingAudio);
+    }
+
+    function stopThinkingAudio() {
+      if (!thinkingAudio) return;
+      try {
+        thinkingAudio.pause();
+        thinkingAudio.currentTime = 0;
+      } catch {}
+    }
+
     function showStartModal(playSound = true) {
+      stopThinkingAudio();
       startModal.classList.add("show");
       playerInput.focus();
       if (playSound) {
@@ -354,6 +376,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     }
 
     function showResultPopup(mode, amount) {
+      stopThinkingAudio();
       resultCard.classList.remove("win", "motivation");
       if (mode === "win") {
         resultCard.classList.add("win");
@@ -383,6 +406,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     function renderQuestion() {
       if (!questions.length) {
+        stopThinkingAudio();
         questionTextEl.textContent = "No questions available.";
         optionsContainerEl.innerHTML = "";
         confirmBtn.disabled = true;
@@ -390,6 +414,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
         return;
       }
       playMp3(questionAudio);
+      startThinkingAudio();
       const q = questions[currentIndex];
       resetRoundState();
       questionTextEl.textContent = q.question;
@@ -428,6 +453,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     function confirmAnswer() {
       if (selectedIndex === null || gameEnded) return;
       ensureAudio();
+      stopThinkingAudio();
 
       const q = questions[currentIndex];
       const optionButtons = optionsContainerEl.querySelectorAll(".option");
@@ -464,11 +490,13 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     function nextQuestion() {
       if (gameEnded) return;
+      stopThinkingAudio();
       currentIndex += 1;
       renderQuestion();
     }
 
     function restartGame() {
+      stopThinkingAudio();
       currentIndex = 0;
       selectedIndex = null;
       currentMoney = 0;
@@ -622,6 +650,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     function promptNewPlayer() {
       hideResultPopup();
+      stopThinkingAudio();
       playerInput.value = "";
       showStartModal(true);
     }
