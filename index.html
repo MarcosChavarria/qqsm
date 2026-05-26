@@ -252,7 +252,7 @@
       <div class="lifelines">
         <button id="fiftyBtn" class="lifeline"><span class="ico">◐</span>50-50</button>
         <button id="teacherBtn" class="lifeline"><span class="ico">?</span>Ask Teacher</button>
-        <button id="chatgptBtn" class="lifeline"><span class="ico">AI</span>Ask ChatGPT</button>
+        <button id="chatgptBtn" class="lifeline"><span class="ico">↻</span>Change Question</button>
       </div>
 
       <p id="questionText">Loading questions...</p>
@@ -271,9 +271,7 @@
       <h3 class="ladder-title">Money Ladder</h3>
       <div id="ladder" class="ladder"></div>
       <p class="warning">
-        Note: questions are loaded from <strong>qqsm_questions.json</strong>.
-        If opened with file://, browser CORS blocks JSON fetch. Use local HTTP:
-        <strong>http://localhost:8000/</strong>.
+        None.
       </p>
     </aside>
   </main>
@@ -358,7 +356,7 @@
     const lifelinesUsed = {
       fifty: false,
       teacher: false,
-      chatgpt: false
+      changeQuestion: false
     };
 
     const questionNumberEl = document.getElementById("questionNumber");
@@ -502,7 +500,7 @@
       gameEnded = false;
       lifelinesUsed.fifty = false;
       lifelinesUsed.teacher = false;
-      lifelinesUsed.chatgpt = false;
+      lifelinesUsed.changeQuestion = false;
       [fiftyBtn, teacherBtn, chatgptBtn].forEach(btn => btn.classList.remove("used"));
       fiftyBtn.disabled = false;
       teacherBtn.disabled = false;
@@ -550,13 +548,23 @@
         : "Teacher hint mark removed.";
     }
 
-    function markChatGPT() {
-      if (gameEnded) return;
-      lifelinesUsed.chatgpt = !lifelinesUsed.chatgpt;
-      chatgptBtn.classList.toggle("used", lifelinesUsed.chatgpt);
-      messageEl.textContent = lifelinesUsed.chatgpt
-        ? "Ask ChatGPT marked as used."
-        : "Ask ChatGPT mark removed.";
+    function useQuestionChange() {
+      if (gameEnded || lifelinesUsed.changeQuestion) return;
+      if (!questions.length) return;
+
+      const candidates = questionBank.filter(q => !questions.includes(q));
+      if (!candidates.length) {
+        messageEl.textContent = "No extra questions available to replace this one.";
+        return;
+      }
+
+      const replacement = candidates[Math.floor(Math.random() * candidates.length)];
+      questions[currentIndex] = replacement;
+      lifelinesUsed.changeQuestion = true;
+      chatgptBtn.classList.add("used");
+      chatgptBtn.disabled = true;
+      renderQuestion();
+      messageEl.textContent = "Question changed.";
     }
 
     function getRandomQuestions(source, count) {
@@ -606,7 +614,7 @@
     restartBtn.addEventListener("click", restartGame);
     fiftyBtn.addEventListener("click", useFiftyFifty);
     teacherBtn.addEventListener("click", markTeacherHint);
-    chatgptBtn.addEventListener("click", markChatGPT);
+    chatgptBtn.addEventListener("click", useQuestionChange);
 
     loadQuestions();
   </script>

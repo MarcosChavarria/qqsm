@@ -15,7 +15,7 @@ Aplicación web en **HTML + CSS + JavaScript** que simula una dinámica tipo *Wh
 - Comodines:
   - `50-50` (elimina dos opciones incorrectas al azar)
   - `Ask Teacher` (marcar/desmarcar)
-  - `Ask ChatGPT` (marcar/desmarcar)
+  - `Change Question` (cambia la pregunta actual, de un solo uso)
 - Indicador de origen de preguntas:
   - `Source: JSON` si se cargó desde archivo JSON
   - `Source: Fallback` si usó preguntas internas de respaldo
