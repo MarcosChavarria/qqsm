@@ -52,6 +52,13 @@
       font-size: 0.95rem;
     }
 
+    .header-menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
     .status-row {
       display: flex;
       flex-wrap: wrap;
