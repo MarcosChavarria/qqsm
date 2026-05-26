@@ -1,242 +1,482 @@
 [
   {
     "question": "Choose the correct sentence:",
-    "options": ["Last night I watch a movie.", "Last night I watched a movie.", "Last night I watches a movie.", "Last night I watching a movie."],
-    "answerIndex": 1
+    "options": [
+      "Last night I watched a movie.",
+      "Last night I watch a movie.",
+      "Last night I watches a movie.",
+      "Last night I watching a movie."
+    ],
+    "answerIndex": 0
   },
   {
     "question": "What is the past tense of \"go\"?",
-    "options": ["goed", "went", "gone", "goes"],
+    "options": [
+      "goed",
+      "went",
+      "gone",
+      "goes"
+    ],
     "answerIndex": 1
   },
   {
     "question": "Complete: She ____ her homework before dinner.",
-    "options": ["finish", "finishes", "finished", "finisht"],
+    "options": [
+      "finish",
+      "finishes",
+      "finished",
+      "finisht"
+    ],
     "answerIndex": 2
   },
   {
     "question": "Choose the correct form:",
-    "options": ["They seen the show yesterday.", "They saw the show yesterday.", "They see the show yesterday.", "They seed the show yesterday."],
-    "answerIndex": 1
+    "options": [
+      "They seen the show yesterday.",
+      "They see the show yesterday.",
+      "They seed the show yesterday.",
+      "They saw the show yesterday."
+    ],
+    "answerIndex": 3
   },
   {
     "question": "What is the past tense of \"study\"?",
-    "options": ["studied", "studyed", "studi", "studys"],
+    "options": [
+      "studied",
+      "studyed",
+      "studi",
+      "studys"
+    ],
     "answerIndex": 0
   },
   {
     "question": "Complete: We ____ to the beach last Sunday.",
-    "options": ["drive", "drived", "drove", "driven"],
-    "answerIndex": 2
-  },
-  {
-    "question": "Choose the correct question:",
-    "options": ["Did you played soccer?", "Did you play soccer?", "Did you playing soccer?", "Do you played soccer?"],
+    "options": [
+      "drive",
+      "drove",
+      "drived",
+      "driven"
+    ],
     "answerIndex": 1
   },
   {
+    "question": "Choose the correct question:",
+    "options": [
+      "Did you played soccer?",
+      "Did you playing soccer?",
+      "Did you play soccer?",
+      "Do you played soccer?"
+    ],
+    "answerIndex": 2
+  },
+  {
     "question": "What is the past tense of \"eat\"?",
-    "options": ["ate", "eated", "eaten", "eat"],
-    "answerIndex": 0
+    "options": [
+      "eated",
+      "eaten",
+      "eat",
+      "ate"
+    ],
+    "answerIndex": 3
   },
   {
     "question": "Complete: He ____ very tired after work.",
-    "options": ["was", "were", "is", "be"],
+    "options": [
+      "was",
+      "were",
+      "is",
+      "be"
+    ],
     "answerIndex": 0
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["I didn't went to school.", "I didn't go to school.", "I not go to school.", "I didn't gone to school."],
+    "options": [
+      "I didn't went to school.",
+      "I didn't go to school.",
+      "I not go to school.",
+      "I didn't gone to school."
+    ],
     "answerIndex": 1
   },
   {
     "question": "In the 90s, many kids ____ Dragon Ball after school.",
-    "options": ["watch", "watched", "watches", "watching"],
-    "answerIndex": 1
+    "options": [
+      "watch",
+      "watches",
+      "watched",
+      "watching"
+    ],
+    "answerIndex": 2
   },
   {
     "question": "What is the past tense of \"write\"?",
-    "options": ["writed", "wrote", "written", "write"],
-    "answerIndex": 1
+    "options": [
+      "writed",
+      "written",
+      "write",
+      "wrote"
+    ],
+    "answerIndex": 3
   },
   {
     "question": "Complete: Pikachu ____ Team Rocket again.",
-    "options": ["defeat", "defeated", "defeats", "defeaten"],
-    "answerIndex": 1
+    "options": [
+      "defeated",
+      "defeat",
+      "defeats",
+      "defeaten"
+    ],
+    "answerIndex": 0
   },
   {
     "question": "Choose the correct sentence about a 90s cartoon:",
-    "options": ["SpongeBob first air in 1999.", "SpongeBob first aired in 1999.", "SpongeBob first airing in 1999.", "SpongeBob first airs in 1999."],
+    "options": [
+      "SpongeBob first air in 1999.",
+      "SpongeBob first aired in 1999.",
+      "SpongeBob first airing in 1999.",
+      "SpongeBob first airs in 1999."
+    ],
     "answerIndex": 1
   },
   {
     "question": "What is the past tense of \"take\"?",
-    "options": ["taked", "taken", "took", "take"],
+    "options": [
+      "taked",
+      "taken",
+      "took",
+      "take"
+    ],
     "answerIndex": 2
   },
   {
     "question": "Complete: We ____ \"The Lion King\" when we were children.",
-    "options": ["love", "loved", "loves", "loving"],
-    "answerIndex": 1
+    "options": [
+      "love",
+      "loves",
+      "loving",
+      "loved"
+    ],
+    "answerIndex": 3
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["Harry Potter and his friends fight Voldemort.", "Harry Potter and his friends fought Voldemort.", "Harry Potter and his friends fighted Voldemort.", "Harry Potter and his friends fighting Voldemort."],
-    "answerIndex": 1
+    "options": [
+      "Harry Potter and his friends fought Voldemort.",
+      "Harry Potter and his friends fight Voldemort.",
+      "Harry Potter and his friends fighted Voldemort.",
+      "Harry Potter and his friends fighting Voldemort."
+    ],
+    "answerIndex": 0
   },
   {
     "question": "What is the past tense of \"make\"?",
-    "options": ["maked", "made", "make", "making"],
+    "options": [
+      "maked",
+      "made",
+      "make",
+      "making"
+    ],
     "answerIndex": 1
   },
   {
     "question": "Complete: In \"Titanic\", Jack ____ Rose on the ship.",
-    "options": ["meet", "met", "meeted", "meeting"],
-    "answerIndex": 1
+    "options": [
+      "meet",
+      "meeted",
+      "met",
+      "meeting"
+    ],
+    "answerIndex": 2
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["Batman begin in comics decades ago.", "Batman began in comics decades ago.", "Batman begined in comics decades ago.", "Batman begins in comics decades ago."],
-    "answerIndex": 1
+    "options": [
+      "Batman begin in comics decades ago.",
+      "Batman begined in comics decades ago.",
+      "Batman begins in comics decades ago.",
+      "Batman began in comics decades ago."
+    ],
+    "answerIndex": 3
   },
   {
     "question": "What is the past tense of \"run\"?",
-    "options": ["runned", "ran", "run", "running"],
-    "answerIndex": 1
+    "options": [
+      "ran",
+      "runned",
+      "run",
+      "running"
+    ],
+    "answerIndex": 0
   },
   {
     "question": "Complete: They ____ pizza during the movie.",
-    "options": ["eat", "ate", "eaten", "eats"],
+    "options": [
+      "eat",
+      "ate",
+      "eaten",
+      "eats"
+    ],
     "answerIndex": 1
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["She buyed a new phone yesterday.", "She bought a new phone yesterday.", "She buys a new phone yesterday.", "She buying a new phone yesterday."],
-    "answerIndex": 1
+    "options": [
+      "She buyed a new phone yesterday.",
+      "She buys a new phone yesterday.",
+      "She bought a new phone yesterday.",
+      "She buying a new phone yesterday."
+    ],
+    "answerIndex": 2
   },
   {
     "question": "What is the past tense of \"sleep\"?",
-    "options": ["sleeped", "slept", "sleep", "sleeps"],
-    "answerIndex": 1
+    "options": [
+      "sleeped",
+      "sleep",
+      "sleeps",
+      "slept"
+    ],
+    "answerIndex": 3
   },
   {
     "question": "Complete: We ____ late, so we missed the bus.",
-    "options": ["wake", "woke", "waked", "woken"],
-    "answerIndex": 1
+    "options": [
+      "woke",
+      "wake",
+      "waked",
+      "woken"
+    ],
+    "answerIndex": 0
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["Did he wrote the email?", "Did he write the email?", "Did he written the email?", "Does he wrote the email?"],
+    "options": [
+      "Did he wrote the email?",
+      "Did he write the email?",
+      "Did he written the email?",
+      "Does he wrote the email?"
+    ],
     "answerIndex": 1
   },
   {
     "question": "What is the past tense of \"build\"?",
-    "options": ["builded", "built", "build", "building"],
-    "answerIndex": 1
+    "options": [
+      "builded",
+      "build",
+      "built",
+      "building"
+    ],
+    "answerIndex": 2
   },
   {
     "question": "Complete: Bob the Builder ____ many houses in the cartoon.",
-    "options": ["fix", "fixed", "fixt", "fixes"],
-    "answerIndex": 1
+    "options": [
+      "fix",
+      "fixt",
+      "fixes",
+      "fixed"
+    ],
+    "answerIndex": 3
   },
   {
     "question": "Choose the correct sentence about a famous movie:",
-    "options": ["In Star Wars, Luke become a Jedi.", "In Star Wars, Luke became a Jedi.", "In Star Wars, Luke becomed a Jedi.", "In Star Wars, Luke becomes a Jedi yesterday."],
-    "answerIndex": 1
+    "options": [
+      "In Star Wars, Luke became a Jedi.",
+      "In Star Wars, Luke become a Jedi.",
+      "In Star Wars, Luke becomed a Jedi.",
+      "In Star Wars, Luke becomes a Jedi yesterday."
+    ],
+    "answerIndex": 0
   },
   {
     "question": "What is the past tense of \"drink\"?",
-    "options": ["dranked", "drunk", "drank", "drinked"],
-    "answerIndex": 2
+    "options": [
+      "dranked",
+      "drank",
+      "drunk",
+      "drinked"
+    ],
+    "answerIndex": 1
   },
   {
     "question": "Complete: Tom and Jerry ____ each other all day.",
-    "options": ["chase", "chased", "chasing", "chases"],
-    "answerIndex": 1
+    "options": [
+      "chase",
+      "chasing",
+      "chased",
+      "chases"
+    ],
+    "answerIndex": 2
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["We was at home last night.", "We were at home last night.", "We are at home last night.", "We be at home last night."],
-    "answerIndex": 1
+    "options": [
+      "We was at home last night.",
+      "We are at home last night.",
+      "We be at home last night.",
+      "We were at home last night."
+    ],
+    "answerIndex": 3
   },
   {
     "question": "What is the past tense of \"have\"?",
-    "options": ["haved", "had", "has", "have"],
-    "answerIndex": 1
-  },
-  {
-    "question": "Complete: I ____ my keys this morning.",
-    "options": ["lose", "losed", "lost", "losen"],
-    "answerIndex": 2
-  },
-  {
-    "question": "Choose the correct sentence about the 90s:",
-    "options": ["People used dial-up internet in the 90s.", "People use dial-up internet in the 90s yesterday.", "People using dial-up internet in the 90s.", "People uses dial-up internet in the 90s."],
+    "options": [
+      "had",
+      "haved",
+      "has",
+      "have"
+    ],
     "answerIndex": 0
   },
   {
-    "question": "What is the past tense of \"find\"?",
-    "options": ["finded", "founded", "found", "find"],
+    "question": "Complete: I ____ my keys this morning.",
+    "options": [
+      "lose",
+      "lost",
+      "losed",
+      "losen"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "Choose the correct sentence about the 90s:",
+    "options": [
+      "People use dial-up internet in the 90s yesterday.",
+      "People using dial-up internet in the 90s.",
+      "People used dial-up internet in the 90s.",
+      "People uses dial-up internet in the 90s."
+    ],
     "answerIndex": 2
   },
   {
+    "question": "What is the past tense of \"find\"?",
+    "options": [
+      "finded",
+      "founded",
+      "find",
+      "found"
+    ],
+    "answerIndex": 3
+  },
+  {
     "question": "Complete: She ____ a great book last weekend.",
-    "options": ["read", "reads", "readed", "reading"],
+    "options": [
+      "read",
+      "reads",
+      "readed",
+      "reading"
+    ],
     "answerIndex": 0
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["He didn't knew the answer.", "He didn't know the answer.", "He didn't known the answer.", "He doesn't knew the answer."],
+    "options": [
+      "He didn't knew the answer.",
+      "He didn't know the answer.",
+      "He didn't known the answer.",
+      "He doesn't knew the answer."
+    ],
     "answerIndex": 1
   },
   {
     "question": "What is the past tense of \"teach\"?",
-    "options": ["teached", "taught", "teach", "teaching"],
-    "answerIndex": 1
-  },
-  {
-    "question": "Complete: Our teacher ____ us irregular verbs yesterday.",
-    "options": ["teach", "teached", "taught", "teaches"],
+    "options": [
+      "teached",
+      "teach",
+      "taught",
+      "teaching"
+    ],
     "answerIndex": 2
   },
   {
+    "question": "Complete: Our teacher ____ us irregular verbs yesterday.",
+    "options": [
+      "teach",
+      "teached",
+      "teaches",
+      "taught"
+    ],
+    "answerIndex": 3
+  },
+  {
     "question": "Choose the correct sentence about a movie:",
-    "options": ["In Jurassic Park, dinosaurs escaped.", "In Jurassic Park, dinosaurs escape yesterday.", "In Jurassic Park, dinosaurs escaping.", "In Jurassic Park, dinosaurs escapeded."],
+    "options": [
+      "In Jurassic Park, dinosaurs escaped.",
+      "In Jurassic Park, dinosaurs escape yesterday.",
+      "In Jurassic Park, dinosaurs escaping.",
+      "In Jurassic Park, dinosaurs escapeded."
+    ],
     "answerIndex": 0
   },
   {
     "question": "What is the past tense of \"think\"?",
-    "options": ["thinked", "thought", "thunk", "think"],
+    "options": [
+      "thinked",
+      "thought",
+      "thunk",
+      "think"
+    ],
     "answerIndex": 1
   },
   {
     "question": "Complete: We ____ the test was easy.",
-    "options": ["think", "thought", "thinks", "thinking"],
-    "answerIndex": 1
+    "options": [
+      "think",
+      "thinks",
+      "thought",
+      "thinking"
+    ],
+    "answerIndex": 2
   },
   {
     "question": "Choose the correct sentence:",
-    "options": ["She singed very well at the concert.", "She sang very well at the concert.", "She sung very well at the concert.", "She sings very well at the concert yesterday."],
-    "answerIndex": 1
+    "options": [
+      "She singed very well at the concert.",
+      "She sung very well at the concert.",
+      "She sings very well at the concert yesterday.",
+      "She sang very well at the concert."
+    ],
+    "answerIndex": 3
   },
   {
     "question": "What is the past tense of \"come\"?",
-    "options": ["comed", "came", "come", "comes"],
-    "answerIndex": 1
+    "options": [
+      "came",
+      "comed",
+      "come",
+      "comes"
+    ],
+    "answerIndex": 0
   },
   {
     "question": "Complete: My friends ____ to my birthday party.",
-    "options": ["come", "came", "comed", "comes"],
+    "options": [
+      "come",
+      "came",
+      "comed",
+      "comes"
+    ],
     "answerIndex": 1
   },
   {
     "question": "Choose the correct sentence about cartoons:",
-    "options": ["Scooby-Doo solved many mysteries.", "Scooby-Doo solve many mysteries yesterday.", "Scooby-Doo solving many mysteries.", "Scooby-Doo solveded many mysteries."],
-    "answerIndex": 0
+    "options": [
+      "Scooby-Doo solve many mysteries yesterday.",
+      "Scooby-Doo solving many mysteries.",
+      "Scooby-Doo solved many mysteries.",
+      "Scooby-Doo solveded many mysteries."
+    ],
+    "answerIndex": 2
   },
   {
     "question": "What is the past tense of \"cut\"?",
-    "options": ["cutted", "cut", "cutteded", "cuts"],
-    "answerIndex": 1
+    "options": [
+      "cutted",
+      "cutteded",
+      "cuts",
+      "cut"
+    ],
+    "answerIndex": 3
   }
 ]
