@@ -38,6 +38,22 @@
       border-radius: 16px;
       padding: 18px;
       backdrop-filter: blur(5px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-panel::after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 145px;
+      height: 145px;
+      background-image: url("logo_grande.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.12;
+      pointer-events: none;
     }
 
     .title {
