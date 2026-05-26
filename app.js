@@ -7,7 +7,8 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       win: "gana premio.mp3",
       start: "sonido al inicia juego nuevo player.mp3",
       question: "sonido antes de una pregunta.mp3",
-      lose: "perdio.mp3"
+      lose: "perdio.mp3",
+      correct: "respuestacorrecta.mp3"
     };
 
     const fallbackQuestions = [
@@ -87,6 +88,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     let audioCtx = null;
     let winAudio = null;
     let loseAudio = null;
+    let correctAudio = null;
     let startAudio = null;
     let questionAudio = null;
 
@@ -161,6 +163,10 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       if (!loseAudio) {
         loseAudio = new Audio(AUDIO_FILES.lose);
         loseAudio.preload = "auto";
+      }
+      if (!correctAudio) {
+        correctAudio = new Audio(AUDIO_FILES.correct);
+        correctAudio.preload = "auto";
       }
       if (!questionAudio) {
         questionAudio = new Audio(AUDIO_FILES.question);
@@ -400,7 +406,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
       optionButtons[q.answerIndex].classList.add("correct");
 
       if (correct) {
-        sfxCorrect();
+        playMp3(correctAudio);
         currentMoney = prizeLevels[currentIndex] || currentMoney;
         messageEl.textContent = "Correct answer. You can continue to the next question.";
         if (currentIndex === questions.length - 1 || currentIndex === prizeLevels.length - 1) {
