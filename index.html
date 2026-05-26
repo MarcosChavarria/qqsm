@@ -231,6 +231,57 @@
       line-height: 1.35;
     }
 
+    .result-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2, 8, 20, 0.7);
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .result-modal.show {
+      display: flex;
+    }
+
+    .result-card {
+      width: min(520px, 100%);
+      background: linear-gradient(160deg, #082142, #0d3a6d);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 22px;
+      text-align: center;
+      animation: popupIn 260ms ease-out;
+    }
+
+    .result-card.win {
+      border-color: rgba(255, 212, 77, 0.7);
+      box-shadow: 0 0 0 2px rgba(255, 212, 77, 0.2) inset;
+    }
+
+    .result-card.motivation {
+      border-color: rgba(55, 183, 255, 0.7);
+      box-shadow: 0 0 0 2px rgba(55, 183, 255, 0.2) inset;
+    }
+
+    .result-title {
+      margin: 0 0 8px;
+      color: #fff2bf;
+    }
+
+    .result-text {
+      margin: 0 0 16px;
+      color: #e8f3ff;
+      line-height: 1.4;
+    }
+
+    @keyframes popupIn {
+      from { transform: translateY(8px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
     @media (max-width: 900px) {
       .app { grid-template-columns: 1fr; }
     }
@@ -251,7 +302,7 @@
 
       <div class="lifelines">
         <button id="fiftyBtn" class="lifeline"><span class="ico">◐</span>50-50</button>
-        <button id="teacherBtn" class="lifeline"><span class="ico">?</span>Ask Teacher</button>
+        <button id="teacherBtn" class="lifeline"><span class="ico">?</span>Pedir un tip al teacher</button>
         <button id="chatgptBtn" class="lifeline"><span class="ico">↻</span>Change Question</button>
       </div>
 
@@ -275,6 +326,14 @@
       </p>
     </aside>
   </main>
+
+  <div id="resultModal" class="result-modal" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div id="resultCard" class="result-card">
+      <h2 id="resultTitle" class="result-title"></h2>
+      <p id="resultText" class="result-text"></p>
+      <button id="closeResultBtn" class="primary" type="button">Continue</button>
+    </div>
+  </div>
 
   <script>
     const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
@@ -373,6 +432,11 @@
     const fiftyBtn = document.getElementById("fiftyBtn");
     const teacherBtn = document.getElementById("teacherBtn");
     const chatgptBtn = document.getElementById("chatgptBtn");
+    const resultModal = document.getElementById("resultModal");
+    const resultCard = document.getElementById("resultCard");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultText = document.getElementById("resultText");
+    const closeResultBtn = document.getElementById("closeResultBtn");
 
     function formatMoney(value) {
       return "$" + value.toLocaleString("en-US");
@@ -411,6 +475,24 @@
         }
       });
       return guaranteed;
+    }
+
+    function showResultPopup(mode, amount) {
+      resultCard.classList.remove("win", "motivation");
+      if (mode === "win") {
+        resultCard.classList.add("win");
+        resultTitle.textContent = "Great Performance!";
+        resultText.textContent = `You finished the game with ${formatMoney(amount)}.`;
+      } else {
+        resultCard.classList.add("motivation");
+        resultTitle.textContent = "Keep Going!";
+        resultText.textContent = "You earned $0 this time, but you are improving. Try again and reach the safe levels.";
+      }
+      resultModal.classList.add("show");
+    }
+
+    function hideResultPopup() {
+      resultModal.classList.remove("show");
     }
 
     function resetRoundState() {
@@ -471,6 +553,9 @@
         if (currentIndex === questions.length - 1 || currentIndex === prizeLevels.length - 1) {
           messageEl.textContent = `Great job! You finished with ${formatMoney(currentMoney)}.`;
           gameEnded = true;
+          if (currentMoney > 0) {
+            showResultPopup("win", currentMoney);
+          }
         } else {
           nextBtn.disabled = false;
         }
@@ -481,6 +566,11 @@
         currentMoney = guaranteedMoney;
         messageEl.textContent = `Incorrect. Game over. You return to your last safe checkpoint: ${formatMoney(currentMoney)}.`;
         gameEnded = true;
+        if (currentMoney === 0) {
+          showResultPopup("motivation", currentMoney);
+        } else {
+          showResultPopup("win", currentMoney);
+        }
       }
 
       confirmBtn.disabled = true;
@@ -615,6 +705,10 @@
     fiftyBtn.addEventListener("click", useFiftyFifty);
     teacherBtn.addEventListener("click", markTeacherHint);
     chatgptBtn.addEventListener("click", useQuestionChange);
+    closeResultBtn.addEventListener("click", hideResultPopup);
+    resultModal.addEventListener("click", (event) => {
+      if (event.target === resultModal) hideResultPopup();
+    });
 
     loadQuestions();
   </script>
