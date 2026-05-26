@@ -5,14 +5,14 @@ cd /d "%~dp0"
 
 where py >nul 2>nul
 if %errorlevel%==0 (
-  start "" "http://localhost:8000/QQSM.HTML"
+  start "" "http://localhost:8000/"
   py -m http.server 8000
   goto :eof
 )
 
 where python >nul 2>nul
 if %errorlevel%==0 (
-  start "" "http://localhost:8000/QQSM.HTML"
+  start "" "http://localhost:8000/"
   python -m http.server 8000
   goto :eof
 )
@@ -20,3 +20,4 @@ if %errorlevel%==0 (
 echo Python no esta instalado o no esta en PATH.
 echo Instala Python y vuelve a ejecutar este archivo.
 pause
+

@@ -23,7 +23,7 @@ Aplicación web en **HTML + CSS + JavaScript** que simula una dinámica tipo *Wh
 ## Estructura esperada
 
 ```text
-QQSM.HTML
+index.html
 qqsm_questions.json
 run_qqsm_server.bat
 ```
@@ -42,7 +42,7 @@ Usa servidor local:
 1. Ejecuta:
    - `run_qqsm_server.bat`
 2. Abre en navegador:
-   - `http://localhost:8000/QQSM.HTML`
+   - `http://localhost:8000/index.html`
 
 Alternativa manual:
 
@@ -50,7 +50,7 @@ Alternativa manual:
 python -m http.server 8000
 ```
 
-Luego abre `http://localhost:8000/QQSM.HTML`.
+Luego abre `http://localhost:8000/index.html`.
 
 ## Formato del JSON de preguntas
 
@@ -73,9 +73,9 @@ Reglas:
 ## Personalización rápida
 
 - Cambiar cantidad de preguntas por partida:
-  - En `QQSM.HTML`, variable `QUESTIONS_PER_RUN`.
+  - En `index.html`, variable `QUESTIONS_PER_RUN`.
 - Ajustar escalera de dinero:
-  - En `QQSM.HTML`, arreglo `prizeLevels`.
+  - En `index.html`, arreglo `prizeLevels`.
 - Modificar estilo visual:
   - Variables CSS en `:root`.
 
@@ -95,4 +95,5 @@ Reforzar la gramática del **pasado simple** en inglés mediante preguntas de:
 - Sonidos/efectos estilo concurso.
 - Guardado de puntajes.
 - Modo profesor con carga de banco de preguntas desde UI.
+
 
