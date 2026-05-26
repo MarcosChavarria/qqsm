@@ -1,60 +1,84 @@
-# QQSM - Juego estilo "¿Quién quiere ser millonario?" (English Past Tense)
+# QQSM - Juego estilo "¿Quién quiere ser millonario?" (Past Tense)
 
-Aplicación web en **HTML + CSS + JavaScript** que simula una dinámica tipo *Who Wants to Be a Millionaire?* para practicar el **pasado en inglés** (verbos regulares e irregulares).
+Aplicación web en **HTML + CSS + JavaScript** para practicar pasado simple en inglés (verbos regulares e irregulares) con dinámica tipo concurso.
 
-## Características
+## Estado actual del proyecto
 
-- Interfaz de juego con:
-  - Pregunta actual
-  - Opciones de respuesta
-  - Confirmación de respuesta
-  - Escalera de dinero por niveles
-  - Acumulado de premio
-- Banco de preguntas en archivo externo JSON (`qqsm_questions.json`).
-- Selección aleatoria de preguntas por partida (run).
+- Interfaz principal en inglés.
+- Preguntas aleatorias por partida (10 por run).
+- Escalera de dinero con **2 zonas seguras** (checkpoints).
 - Comodines:
-  - `50-50` (elimina dos opciones incorrectas al azar)
-  - `Ask Teacher` (marcar/desmarcar)
-  - `Change Question` (cambia la pregunta actual, de un solo uso)
-- Indicador de origen de preguntas:
-  - `Source: JSON` si se cargó desde archivo JSON
-  - `Source: Fallback` si usó preguntas internas de respaldo
+  - `50-50`: elimina dos opciones incorrectas aleatorias.
+  - `Ask Teacher for a Tip`: se puede marcar/desmarcar.
+  - `Change Question`: cambia la pregunta actual (un solo uso).
+- Flujo de respuesta con selección + confirmación.
+- Popups de cierre:
+  - Celebración si termina con dinero.
+  - Mensaje motivacional si termina en `$0`.
+- Efectos de sonido estilo concurso (Web Audio API).
+- Top 5 persistente con `localStorage` (solo puntajes > `$0`).
+- Inicio de partida solicitando nombre del participante.
+- Botón `New Player` para cambiar de participante.
+- Botón `Teacher Mode` fuera del flujo del juego (zona administrativa inferior).
 
-## Estructura esperada
+## Modo Profesor (Teacher Mode)
+
+Incluye editor visual de banco de preguntas desde UI:
+
+- Archivo: `teacher_mode.html`
+- Navegación tipo carrusel (una pregunta a la vez).
+- Flechas `Previous/Next` para moverse entre preguntas.
+- Al crear una nueva pregunta, salta automáticamente a la última.
+- Permite:
+  - agregar preguntas
+  - editar texto/opciones/respuesta correcta
+  - borrar preguntas
+  - importar JSON
+  - exportar JSON
+  - guardar banco personalizado para el juego
+  - resetear al banco por defecto (`qqsm_questions.json`)
+
+El banco personalizado se guarda en `localStorage` (`qqsm_question_bank_v1`) y el juego lo detecta automáticamente (`Source: Teacher Bank`).
+
+## Estructura de archivos
 
 ```text
 index.html
+styles.css
+app.js
+teacher_mode.html
+teacher_mode.css
+teacher_mode.js
 qqsm_questions.json
 run_qqsm_server.bat
+README.md
 ```
 
 ## Requisitos
 
 - Navegador moderno (Edge, Chrome, Firefox).
-- Python instalado (solo para ejecutar servidor local simple con `http.server`).
+- Python en PATH (para servidor local simple).
 
 ## Ejecución recomendada (evitar CORS)
 
-Si abres el HTML con `file://`, el navegador puede bloquear la lectura del JSON por CORS.
+No abras `index.html` con `file://` porque el navegador puede bloquear la carga del JSON.
 
-Usa servidor local:
+### Opción rápida
 
-1. Ejecuta:
-   - `run_qqsm_server.bat`
-2. Abre en navegador:
-   - `http://localhost:8000/index.html`
+1. Ejecuta `run_qqsm_server.bat`
+2. Abre `http://localhost:8000/`
 
-Alternativa manual:
+### Opción manual
 
 ```bash
 python -m http.server 8000
 ```
 
-Luego abre `http://localhost:8000/index.html`.
+Luego abre `http://localhost:8000/`.
 
-## Formato del JSON de preguntas
+## Formato del banco de preguntas (JSON)
 
-Cada pregunta debe tener esta estructura:
+Cada pregunta debe cumplir:
 
 ```json
 {
@@ -66,34 +90,21 @@ Cada pregunta debe tener esta estructura:
 
 Reglas:
 
-- `question`: texto de la pregunta.
-- `options`: arreglo con opciones (idealmente 4).
-- `answerIndex`: índice de la opción correcta (base 0).
+- `question`: string
+- `options`: arreglo de 4 strings no vacíos
+- `answerIndex`: entero entre `0` y `3`
+
+## Persistencia local
+
+- Puntajes: `localStorage` clave `qqsm_scores_v1`
+- Banco custom de preguntas: `localStorage` clave `qqsm_question_bank_v1`
 
 ## Personalización rápida
 
-- Cambiar cantidad de preguntas por partida:
-  - En `index.html`, variable `QUESTIONS_PER_RUN`.
-- Ajustar escalera de dinero:
-  - En `index.html`, arreglo `prizeLevels`.
-- Modificar estilo visual:
-  - Variables CSS en `:root`.
-
-## Objetivo pedagógico
-
-Reforzar la gramática del **pasado simple** en inglés mediante preguntas de:
-
-- Cultura general
-- Caricaturas noventeras
-- Películas populares
-- Uso de verbos regulares e irregulares
-
-## Posibles mejoras futuras
-
-- Cronómetro por pregunta.
-- Niveles de dificultad progresivos.
-- Sonidos/efectos estilo concurso.
-- Guardado de puntajes.
-- Modo profesor con carga de banco de preguntas desde UI.
+- Cantidad de preguntas por run: `QUESTIONS_PER_RUN` en `app.js`.
+- Escalera de dinero: `prizeLevels` en `app.js`.
+- Zonas seguras: `safeLevelIndexes` en `app.js`.
+- Estilos principales: `styles.css`.
+- Estilos Teacher Mode: `teacher_mode.css`.
 
 
