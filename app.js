@@ -95,6 +95,7 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     let questionAudio = null;
     let fiftyAudio = null;
     let tipAudio = null;
+    let startPromptSoundPlayed = false;
 
     const lifelinesUsed = {
       fifty: false,
@@ -200,7 +201,19 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
     function showStartModal(playSound = true) {
       startModal.classList.add("show");
       playerInput.focus();
-      if (playSound) playMp3(startAudio);
+      if (playSound) {
+        playMp3(startAudio);
+        startPromptSoundPlayed = true;
+      }
+    }
+
+    function tryPlayInitialStartPromptSound() {
+      if (startPromptSoundPlayed) return;
+      if (!startModal.classList.contains("show")) return;
+      ensureAudio();
+      ensureMp3Audio();
+      playMp3(startAudio);
+      startPromptSoundPlayed = true;
     }
 
     function playTone(freq, duration = 0.14, type = "sine", volume = 0.03, delay = 0) {
@@ -636,4 +649,6 @@ const prizeLevels = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000];
 
     ensureMp3Audio();
     renderTopScores();
-    showStartModal(true);
+    showStartModal(false);
+    document.addEventListener("pointerdown", tryPlayInitialStartPromptSound, { once: true });
+    document.addEventListener("keydown", tryPlayInitialStartPromptSound, { once: true });
